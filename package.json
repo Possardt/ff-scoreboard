@@ -1,0 +1,23 @@
+{
+  "name": "ff-scoreboard",
+  "version": "1.0.0",
+  "description": "A scoreboard to display more than one espn fantasy football game at a time",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "fantasy",
+    "football",
+    "scoreboard"
+  ],
+  "author": "Ryan Possardt",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "espn-ff-api": "^1.0.5",
+    "express": "^4.16.2",
+    "http": "0.0.0"
+  }
+}
