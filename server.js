@@ -28,9 +28,10 @@
     }
   });
 
-  const validRequestBody = body => {
-    return (body.leagueId && body.teamLocation && body.teamName
-        && body.cookies.espnS2 && body.cookies.SWID);
+  let validRequestBody = (body) => {
+    return (body.leagueId && body.teamLocation &&
+            body.teamName && body.cookies.espnS2 &&
+            body.cookies.SWID);
   }
 
   server.listen(3000);
