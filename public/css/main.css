@@ -1,5 +1,25 @@
+body, div, input, form, button{
+  font-family: Roboto;
+  font-weight: 300;
+  font-size: large;
+}
+
 .container{
   width: 80vw;
-  font-family: Roboto;
-  font-weight: 400;
+  margin: 0 auto;
+}
+
+.enter-team form{
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  font-size: 3.5em;
+  margin: 0 auto;
+}
+
+.enter-team input,
+.enter-team button {
+  margin-top: 0.15em;
+  margin-bottom: 0.15em;
 }
