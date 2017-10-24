@@ -67,6 +67,8 @@
 /* 0 */
 /***/ (function(module, exports) {
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -149,40 +151,55 @@ class Form extends React.Component {
   }
 }
 
-const Scoreboard = props => {
+const HalfOfScoreBoard = props => {
   return React.createElement(
-    'div',
+    'span',
     null,
-    React.createElement(
-      'div',
-      null,
-      React.createElement(
-        'span',
-        null,
-        props.matchup[0].teamName,
-        ' : ',
-        props.matchup[0].score
-      )
-    ),
-    React.createElement(
-      'div',
-      null,
-      React.createElement(
-        'span',
-        null,
-        props.matchup[1].teamName,
-        ' : ',
-        props.matchup[1].score
-      )
-    )
+    props.team.teamName,
+    ' : ',
+    props.team.score
   );
 };
+
+class Scoreboard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.getMatchupData = () => {
+      console.log('calling');
+      return axios.post('/getFFData', this.state.request).then(result => {
+        this.setState(prevState => ({
+          matchup: result.data
+        }));
+      });
+    };
+
+    this.componentDidMount = () => {
+      setInterval(() => {
+        this.getMatchupData();
+      }, 10000);
+    };
+
+    this.state = {
+      matchup: props.matchup,
+      request: props.request
+    };
+  }
+
+  render() {
+    return React.createElement(
+      'div',
+      { className: 'scoreboard' },
+      this.state.matchup.map((mu, index) => React.createElement(HalfOfScoreBoard, { team: mu, key: index }))
+    );
+  }
+}
 
 const ScoreboardList = props => {
   return React.createElement(
     'div',
     null,
-    props.matchups.map(matchup => React.createElement(Scoreboard, matchup))
+    props.matchups.map((matchup, index) => React.createElement(Scoreboard, _extends({ key: index }, matchup)))
   );
 };
 
@@ -193,7 +210,6 @@ class App extends React.Component {
     return _temp = super(...args), this.state = {
       matchups: []
     }, this.addNewMatchup = matchupInfo => {
-      console.log(matchupInfo);
       this.setState(prevState => ({
         matchups: prevState.matchups.concat([matchupInfo])
       }));

@@ -76,27 +76,52 @@ class Form extends React.Component {
   }
 }
 
-const Scoreboard = (props) => {
+const HalfOfScoreBoard = (props) => {
   return(
-    <div>
-      <div>
-        <span>
-          {props.matchup[0].teamName} : {props.matchup[0].score}
-        </span>
-      </div>
-      <div>
-        <span>
-          {props.matchup[1].teamName} : {props.matchup[1].score}
-        </span>
-      </div>
-    </div>
+    <span>
+      {props.team.teamName} : {props.team.score}
+    </span>
   );
+}
+
+class Scoreboard extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+        matchup : props.matchup,
+        request : props.request
+    }
+  }
+
+  getMatchupData = () => {
+    console.log('calling');
+    return axios.post('/getFFData', this.state.request)
+      .then((result) => {
+        this.setState((prevState) => ({
+          matchup : result.data
+        }));
+      });
+  }
+
+  componentDidMount = () => {
+    setInterval(() => {
+      this.getMatchupData();
+    }, 10000);
+  }
+
+  render(){
+    return(
+      <div className='scoreboard'>
+        {this.state.matchup.map((mu, index) => <HalfOfScoreBoard team={mu} key={index} />)}
+      </div>
+    );
+  }
 }
 
 const ScoreboardList = (props) => {
   return(
     <div>
-      {props.matchups.map(matchup => <Scoreboard {...matchup}/>)}
+      {props.matchups.map((matchup, index) => <Scoreboard key={index} {...matchup}/>)}
     </div>
   );
 };
@@ -106,7 +131,6 @@ class App extends React.Component {
     matchups : []
   }
   addNewMatchup = (matchupInfo) => {
-    console.log(matchupInfo);
     this.setState((prevState) => ({
       matchups : prevState.matchups.concat([matchupInfo])
     }));
