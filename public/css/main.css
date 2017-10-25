@@ -1,4 +1,4 @@
-body, div, input, form, button{
+body, input, form, button{
   font-family: Roboto;
   font-weight: 300;
   font-size: large;
@@ -7,6 +7,7 @@ body, div, input, form, button{
 .container{
   width: 80vw;
   margin: 0 auto;
+  font-size: large;
 }
 
 .enter-team form{
@@ -22,4 +23,13 @@ body, div, input, form, button{
 .enter-team button {
   margin-top: 0.15em;
   margin-bottom: 0.15em;
+}
+
+.scoreboard {
+  border: 1px solid grey;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  font-size:3em;
 }

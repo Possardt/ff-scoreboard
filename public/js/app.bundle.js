@@ -152,12 +152,20 @@ class Form extends React.Component {
 }
 
 const HalfOfScoreBoard = props => {
+  let backgroundStyle = { backgroundImage: 'url(' + props.team.logoUrl + ')' };
   return React.createElement(
-    'span',
+    'div',
     null,
-    props.team.teamName,
-    ' : ',
-    props.team.score
+    React.createElement(
+      'div',
+      { className: 'teamName' },
+      props.team.teamName
+    ),
+    React.createElement(
+      'div',
+      { className: 'score' },
+      props.team.score
+    )
   );
 };
 

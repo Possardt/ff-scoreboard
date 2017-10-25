@@ -77,10 +77,16 @@ class Form extends React.Component {
 }
 
 const HalfOfScoreBoard = (props) => {
+  let backgroundStyle = {backgroundImage : 'url(' + props.team.logoUrl + ')'};
   return(
-    <span>
-      {props.team.teamName} : {props.team.score}
-    </span>
+    <div>
+      <div className='teamName'>
+        {props.team.teamName}
+      </div>
+      <div className='score'>
+        {props.team.score}
+      </div>
+    </div>
   );
 }
 
@@ -114,6 +120,7 @@ class Scoreboard extends React.Component{
       <div className='scoreboard'>
         {this.state.matchup.map((mu, index) => <HalfOfScoreBoard team={mu} key={index} />)}
       </div>
+
     );
   }
 }
