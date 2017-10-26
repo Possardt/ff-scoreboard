@@ -78,19 +78,22 @@ class Form extends React.Component {
 
 const HalfOfScoreBoard = (props) => {
   let backgroundStyle = {
-    backgroundImage : 'url(' + props.team.logoUrl + ')',
-    backgroundRepeat: 'round',
-    height          : '75px',
-    width           : '75px',
-    borderRadius    : '100px'
+    background: 'url(' + props.team.logoUrl + ')',
+    position: 'absolute',
+    zIndex: '-1',
+    top: '0px',
+    bottom: '0px',
+    left: '0px',
+    right: '0px',
+    opacity: '0.2',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
+    backgroundPositionX: 'center'
   };
   return(
-    <div>
+    <div className='scorecard'>
       <div className='teamName'>
-        <div
-          className='teamIcon'
-          style={backgroundStyle}>
-        </div>
+        <div style={backgroundStyle}></div>
         <div>
           {props.team.teamName}
         </div>

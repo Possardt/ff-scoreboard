@@ -45,3 +45,8 @@ body, input, form, button{
   font-weight: 200;
   font-size:2.5em;
 }
+
+.scorecard {
+  position: relative;
+  z-index: 1;
+}

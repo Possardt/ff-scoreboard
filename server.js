@@ -21,6 +21,9 @@
           espn.getSpecificMatchup(req.body.cookies, req.body.leagueId, req.body.teamLocation, req.body.teamName)
               .then(response => {
                 res.send(response);
+              })
+              .catch(err => {
+                res.status(500).send(err);
               });
     }
     else {
