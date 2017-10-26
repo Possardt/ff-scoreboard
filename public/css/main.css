@@ -33,3 +33,15 @@ body, input, form, button{
   flex-direction: column;
   font-size:3em;
 }
+
+.teamName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.score {
+  font-weight: 200;
+  font-size:2.5em;
+}

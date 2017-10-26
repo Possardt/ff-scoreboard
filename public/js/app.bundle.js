@@ -124,23 +124,23 @@ class Form extends React.Component {
         React.createElement('input', { type: 'text',
           value: this.state.teamLocation,
           onChange: event => this.setState({ teamLocation: event.target.value }),
-          placeholder: 'team location', required: true }),
+          placeholder: 'Team Location', required: true }),
         React.createElement('input', { type: 'text',
           value: this.state.teamName,
           onChange: event => this.setState({ teamName: event.target.value }),
-          placeholder: 'team name', required: true }),
+          placeholder: 'Team Name', required: true }),
         React.createElement('input', { type: 'text',
           value: this.state.leagueId,
           onChange: event => this.setState({ leagueId: event.target.value }),
-          placeholder: 'league id', required: true }),
+          placeholder: 'League ID', required: true }),
         React.createElement('input', { type: 'text',
           value: this.state.espnS2,
           onChange: event => this.setState({ espnS2: event.target.value }),
-          placeholder: 'espnS2 cookie', required: true }),
+          placeholder: 'ESPNS2 Cookie', required: true }),
         React.createElement('input', { type: 'text',
           value: this.state.SWID,
           onChange: event => this.setState({ SWID: event.target.value }),
-          placeholder: 'SWID cookie', required: true }),
+          placeholder: 'SWID Cookie', required: true }),
         React.createElement(
           'button',
           { type: 'submit' },
@@ -152,14 +152,27 @@ class Form extends React.Component {
 }
 
 const HalfOfScoreBoard = props => {
-  let backgroundStyle = { backgroundImage: 'url(' + props.team.logoUrl + ')' };
+  let backgroundStyle = {
+    backgroundImage: 'url(' + props.team.logoUrl + ')',
+    backgroundRepeat: 'round',
+    height: '75px',
+    width: '75px',
+    borderRadius: '100px'
+  };
   return React.createElement(
     'div',
     null,
     React.createElement(
       'div',
       { className: 'teamName' },
-      props.team.teamName
+      React.createElement('div', {
+        className: 'teamIcon',
+        style: backgroundStyle }),
+      React.createElement(
+        'div',
+        null,
+        props.team.teamName
+      )
     ),
     React.createElement(
       'div',
