@@ -94,7 +94,8 @@ class Form extends React.Component {
               SWID: this.state.SWID
             }
           },
-          matchup: result.data
+          matchup: result.data,
+          homeTeam: this.state.teamLocation + this.state.teamName
         };
         this.state.teamLocation = '';
         this.state.teamName = '';
@@ -223,7 +224,7 @@ class Scoreboard extends React.Component {
 const ScoreboardList = props => {
   return React.createElement(
     'div',
-    null,
+    { className: 'scoreboard-list' },
     props.matchups.map((matchup, index) => React.createElement(Scoreboard, _extends({ key: index }, matchup)))
   );
 };
