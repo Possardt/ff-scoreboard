@@ -34,7 +34,7 @@ class Form extends React.Component {
             }
           },
           matchup  : result.data,
-          homeTeam : this.state.teamLocation + this.state.teamName
+          homeTeam : this.state.teamLocation + ' ' + this.state.teamName
         };
         this.state.teamLocation = '';
         this.state.teamName = '';
@@ -91,8 +91,13 @@ const HalfOfScoreBoard = (props) => {
     backgroundSize: 'contain',
     backgroundPositionX: 'center'
   };
+  let scoreChange = props.team.score - props.prevScore;
+  let isHome = props.team.teamName === props.homeTeam;
+  let redFlash = (!isHome && scoreChange);
+  let greenFlash = (isHome && scoreChange);
+  let flashClassName = redFlash ? 'scorecard scoreFlashRed' : greenFlash ? 'scorecard scoreFlashGreen' : 'scorecard';
   return(
-    <div className='scorecard'>
+    <div className={flashClassName}>
       <div className='teamName'>
         <div style={backgroundStyle}></div>
         <div>
@@ -110,17 +115,19 @@ class Scoreboard extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-        matchup : props.matchup,
-        request : props.request
+        matchup     : props.matchup,
+        request     : props.request,
+        prevMatchup : {}
     }
   }
 
   getMatchupData = () => {
-    console.log('calling');
+    // console.log('calling' + this.props.homeTeam);
     return axios.post('/getFFData', this.state.request)
       .then((result) => {
         this.setState((prevState) => ({
-          matchup : result.data
+          prevMatchup : prevState.matchup || result.data,
+          matchup     : result.data
         }));
       });
   }
@@ -132,9 +139,12 @@ class Scoreboard extends React.Component{
   }
 
   render(){
+    let prevGameScore = this.state.prevMatchup.matchup ?  this.state.prevMatchup.matchup[index].score : 0;
     return(
       <div className='scoreboard'>
-        {this.state.matchup.map((mu, index) => <HalfOfScoreBoard team={mu} key={index} />)}
+        {this.state.matchup.map((mu, index) =>
+          <HalfOfScoreBoard team={mu} key={index} prevScore={prevGameScore} homeTeam={this.props.homeTeam}/>
+        )}
       </div>
 
     );

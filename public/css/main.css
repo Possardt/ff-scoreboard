@@ -61,20 +61,39 @@ body, input, form, button{
   flex-wrap:wrap;
 }
 
-@keyframes scoreFlash {
+@keyframes scoreFlashGreen {
   0% {
-    background-color: rgba(95, 216, 59, 0.25);
+    background-color: rgba(150, 245, 122, 0);
   }
  50% {
-   background-color: rgba(95, 216, 59, 0.75);
+   background-color: rgba(150, 245, 122, 0.64);
  }
  100% {
-   background-color: rgba(95, 216, 59, 0.25);
+   background-color: rgba(150, 245, 122, 0);
  }
 }
 
-.scoreflash {
-  animation-name: scoreFlash;
+.scoreFlashGreen {
+  animation-name: scoreFlashGreen;
+  animation-timing-function: ease-in-out;
+  animation-duration: 0.5s;
+  animation-direction: normal;
+}
+
+@keyframes scoreFlashRed {
+  0% {
+    background-color: rgba(245, 128, 122, 0);
+  }
+ 50% {
+   background-color: rgba(245, 128, 122, 0.64);
+ }
+ 100% {
+   background-color: rgba(245, 128, 122, 0);
+ }
+}
+
+.scoreFlashRed {
+  animation-name: scoreFlashRed;
   animation-timing-function: ease-in-out;
   animation-duration: 0.6s;
   animation-direction: normal;

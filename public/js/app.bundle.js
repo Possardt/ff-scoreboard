@@ -95,7 +95,7 @@ class Form extends React.Component {
             }
           },
           matchup: result.data,
-          homeTeam: this.state.teamLocation + this.state.teamName
+          homeTeam: this.state.teamLocation + ' ' + this.state.teamName
         };
         this.state.teamLocation = '';
         this.state.teamName = '';
@@ -166,9 +166,14 @@ const HalfOfScoreBoard = props => {
     backgroundSize: 'contain',
     backgroundPositionX: 'center'
   };
+  let scoreChange = props.team.score - props.prevScore;
+  let isHome = props.team.teamName === props.homeTeam;
+  let redFlash = !isHome && scoreChange;
+  let greenFlash = isHome && scoreChange;
+  let flashClassName = redFlash ? 'scorecard scoreFlashRed' : greenFlash ? 'scorecard scoreFlashGreen' : 'scorecard';
   return React.createElement(
     'div',
-    { className: 'scorecard' },
+    { className: flashClassName },
     React.createElement(
       'div',
       { className: 'teamName' },
@@ -192,9 +197,10 @@ class Scoreboard extends React.Component {
     super(props);
 
     this.getMatchupData = () => {
-      console.log('calling');
+      // console.log('calling' + this.props.homeTeam);
       return axios.post('/getFFData', this.state.request).then(result => {
         this.setState(prevState => ({
+          prevMatchup: prevState.matchup || result.data,
           matchup: result.data
         }));
       });
@@ -208,15 +214,17 @@ class Scoreboard extends React.Component {
 
     this.state = {
       matchup: props.matchup,
-      request: props.request
+      request: props.request,
+      prevMatchup: {}
     };
   }
 
   render() {
+    let prevGameScore = this.state.prevMatchup.matchup ? this.state.prevMatchup.matchup[index].score : 0;
     return React.createElement(
       'div',
       { className: 'scoreboard' },
-      this.state.matchup.map((mu, index) => React.createElement(HalfOfScoreBoard, { team: mu, key: index }))
+      this.state.matchup.map((mu, index) => React.createElement(HalfOfScoreBoard, { team: mu, key: index, prevScore: prevGameScore, homeTeam: this.props.homeTeam }))
     );
   }
 }
