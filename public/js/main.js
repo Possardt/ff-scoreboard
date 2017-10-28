@@ -122,7 +122,7 @@ class Scoreboard extends React.Component{
   }
 
   getMatchupData = () => {
-    // console.log('calling' + this.props.homeTeam);
+    console.log('calling' + this.props.homeTeam);
     return axios.post('/getFFData', this.state.request)
       .then((result) => {
         this.setState((prevState) => ({
@@ -146,7 +146,6 @@ class Scoreboard extends React.Component{
           <HalfOfScoreBoard team={mu} key={index} prevScore={prevGameScore} homeTeam={this.props.homeTeam}/>
         )}
       </div>
-
     );
   }
 }

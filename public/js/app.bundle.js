@@ -197,7 +197,7 @@ class Scoreboard extends React.Component {
     super(props);
 
     this.getMatchupData = () => {
-      // console.log('calling' + this.props.homeTeam);
+      console.log('calling' + this.props.homeTeam);
       return axios.post('/getFFData', this.state.request).then(result => {
         this.setState(prevState => ({
           prevMatchup: prevState.matchup || result.data,
