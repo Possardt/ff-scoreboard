@@ -117,16 +117,16 @@ class Scoreboard extends React.Component{
     this.state = {
         matchup     : props.matchup,
         request     : props.request,
-        prevMatchup : {}
+        prevMatchup : null
     }
   }
 
   getMatchupData = () => {
-    console.log('calling' + this.props.homeTeam);
+    console.log('calling: ' + this.props.homeTeam);
     return axios.post('/getFFData', this.state.request)
       .then((result) => {
         this.setState((prevState) => ({
-          prevMatchup : prevState.matchup || result.data,
+          prevMatchup : prevState.matchup || result.data.matchup,
           matchup     : result.data
         }));
       });
@@ -139,11 +139,11 @@ class Scoreboard extends React.Component{
   }
 
   render(){
-    let prevGameScore = this.state.prevMatchup.matchup ?  this.state.prevMatchup.matchup[index].score : 0;
+    let prevGameArr = this.state.prevMatchup ? this.state.prevMatchup.map((mu) => {return mu.score;}) : [0, 0];
     return(
       <div className='scoreboard'>
         {this.state.matchup.map((mu, index) =>
-          <HalfOfScoreBoard team={mu} key={index} prevScore={prevGameScore} homeTeam={this.props.homeTeam}/>
+          <HalfOfScoreBoard team={mu} key={index} prevScore={prevGameArr[index]} homeTeam={this.props.homeTeam}/>
         )}
       </div>
     );

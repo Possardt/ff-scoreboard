@@ -168,9 +168,11 @@ const HalfOfScoreBoard = props => {
   };
   let scoreChange = props.team.score - props.prevScore;
   let isHome = props.team.teamName === props.homeTeam;
+  console.log(scoreChange);
   let redFlash = !isHome && scoreChange;
   let greenFlash = isHome && scoreChange;
   let flashClassName = redFlash ? 'scorecard scoreFlashRed' : greenFlash ? 'scorecard scoreFlashGreen' : 'scorecard';
+  console.log(flashClassName);
   return React.createElement(
     'div',
     { className: flashClassName },
@@ -200,7 +202,7 @@ class Scoreboard extends React.Component {
       console.log('calling' + this.props.homeTeam);
       return axios.post('/getFFData', this.state.request).then(result => {
         this.setState(prevState => ({
-          prevMatchup: prevState.matchup || result.data,
+          prevMatchup: prevState.matchup || result.data.matchup,
           matchup: result.data
         }));
       });
@@ -215,16 +217,18 @@ class Scoreboard extends React.Component {
     this.state = {
       matchup: props.matchup,
       request: props.request,
-      prevMatchup: {}
+      prevMatchup: null
     };
   }
 
   render() {
-    let prevGameScore = this.state.prevMatchup.matchup ? this.state.prevMatchup.matchup[index].score : 0;
+    let prevGameArr = this.state.prevMatchup ? this.state.prevMatchup.map(mu => {
+      return mu.score;
+    }) : [0, 0];
     return React.createElement(
       'div',
       { className: 'scoreboard' },
-      this.state.matchup.map((mu, index) => React.createElement(HalfOfScoreBoard, { team: mu, key: index, prevScore: prevGameScore, homeTeam: this.props.homeTeam }))
+      this.state.matchup.map((mu, index) => React.createElement(HalfOfScoreBoard, { team: mu, key: index, prevScore: prevGameArr[index], homeTeam: this.props.homeTeam }))
     );
   }
 }
