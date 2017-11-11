@@ -1,75 +1,61 @@
+
+const transformSubmit = (matchupStr) => {
+  let details = matchupStr.split(',');
+  console.log(details);
+  const request = {cookies : {}};
+  details.forEach(detail => {
+    console.log(detail);
+    let detailArr = detail.split('=');
+    console.log(detailArr);
+    if(detailArr[0] === 'SWID' || detailArr[0] === 'espnS2'){
+      request.cookies[detailArr[0]] = detailArr[1];
+    }
+    else if(detailArr[0] === "David's Johnson"){
+      console.log('this seems to handle it fine');
+
+    }
+    else{
+      request[detailArr[0]] = detailArr[1];
+    }
+  });
+  return request;
+}
+
 class Form extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-        teamLocation : '',
-        teamName     : '',
-        leagueId     : '',
-        espnS2       : '',
-        SWID         : ''
+        matchupString : ''
     }
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    return axios
-      .post('/getFFData', {
-        teamLocation : this.state.teamLocation,
-        teamName     : this.state.teamName,
-        leagueId     : this.state.leagueId,
-        cookies      : {
-          espnS2     : this.state.espnS2,
-          SWID       : this.state.SWID
-        }
-      })
+    let requestDetails = transformSubmit(this.state.matchupString);
+    console.log(requestDetails);
+    return axios.post('/getFFData', requestDetails)
       .then(result => {
         const matchupInfo = {
-          request : {
-            teamLocation : this.state.teamLocation,
-            teamName     : this.state.teamName,
-            leagueId     : this.state.leagueId,
-            cookies      : {
-              espnS2     : this.state.espnS2,
-              SWID       : this.state.SWID
-            }
-          },
+          request  : requestDetails,
           matchup  : result.data,
-          homeTeam : this.state.teamLocation + ' ' + this.state.teamName
-        };
-        this.state.teamLocation = '';
-        this.state.teamName = '';
-        this.state.leagueId = '';
-        this.state.espnS2 = '';
-        this.state.SWID = '';
+          homeTeam : requestDetails.teamLocation + ' ' + requestDetails.teamName
+        }
+        this.state.matchupString = '';
         this.props.onSubmit(matchupInfo);
       })
-      .catch(error => alert(error));
-  };
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
   render() {
     return (
       <div className='enter-team'>
         <form onSubmit={this.handleSubmit}>
           <input type='text'
-            value={this.state.teamLocation}
-            onChange={(event) => this.setState({teamLocation : event.target.value})}
-            placeholder='Team Location' required />
-          <input type='text'
-            value={this.state.teamName}
-            onChange={(event) => this.setState({teamName : event.target.value})}
-            placeholder='Team Name' required />
-          <input type='text'
-            value={this.state.leagueId}
-            onChange={(event) => this.setState({leagueId : event.target.value})}
-            placeholder='League ID' required />
-          <input type='text'
-            value={this.state.espnS2}
-            onChange={(event) => this.setState({espnS2 : event.target.value})}
-            placeholder='ESPNS2 Cookie' required />
-          <input type='text'
-            value={this.state.SWID}
-            onChange={(event) => this.setState({SWID : event.target.value})}
-            placeholder='SWID Cookie' required />
+            value={this.state.matchupString}
+            onChange={(event) => this.setState({matchupString : event.target.value})}
+            placeholder='Matchup String' required />
           <button type='submit'>Add team</button>
         </form>
       </div>

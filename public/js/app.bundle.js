@@ -69,49 +69,48 @@
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+const transformSubmit = matchupStr => {
+  let details = matchupStr.split(',');
+  console.log(details);
+  const request = { cookies: {} };
+  details.forEach(detail => {
+    console.log(detail);
+    let detailArr = detail.split('=');
+    console.log(detailArr);
+    if (detailArr[0] === 'SWID' || detailArr[0] === 'espnS2') {
+      request.cookies[detailArr[0]] = detailArr[1];
+    } else if (detailArr[0] === "David's Johnson") {
+      console.log('this seems to handle it fine');
+    } else {
+      request[detailArr[0]] = detailArr[1];
+    }
+  });
+  return request;
+};
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleSubmit = event => {
       event.preventDefault();
-      return axios.post('/getFFData', {
-        teamLocation: this.state.teamLocation,
-        teamName: this.state.teamName,
-        leagueId: this.state.leagueId,
-        cookies: {
-          espnS2: this.state.espnS2,
-          SWID: this.state.SWID
-        }
-      }).then(result => {
+      let requestDetails = transformSubmit(this.state.matchupString);
+      console.log(requestDetails);
+      return axios.post('/getFFData', requestDetails).then(result => {
         const matchupInfo = {
-          request: {
-            teamLocation: this.state.teamLocation,
-            teamName: this.state.teamName,
-            leagueId: this.state.leagueId,
-            cookies: {
-              espnS2: this.state.espnS2,
-              SWID: this.state.SWID
-            }
-          },
+          request: requestDetails,
           matchup: result.data,
-          homeTeam: this.state.teamLocation + ' ' + this.state.teamName
+          homeTeam: requestDetails.teamLocation + ' ' + requestDetails.teamName
         };
-        this.state.teamLocation = '';
-        this.state.teamName = '';
-        this.state.leagueId = '';
-        this.state.espnS2 = '';
-        this.state.SWID = '';
+        this.state.matchupString = '';
         this.props.onSubmit(matchupInfo);
-      }).catch(error => alert(error));
+      }).catch(err => {
+        console.log(err);
+      });
     };
 
     this.state = {
-      teamLocation: '',
-      teamName: '',
-      leagueId: '',
-      espnS2: '',
-      SWID: ''
+      matchupString: ''
     };
   }
 
@@ -123,25 +122,9 @@ class Form extends React.Component {
         'form',
         { onSubmit: this.handleSubmit },
         React.createElement('input', { type: 'text',
-          value: this.state.teamLocation,
-          onChange: event => this.setState({ teamLocation: event.target.value }),
-          placeholder: 'Team Location', required: true }),
-        React.createElement('input', { type: 'text',
-          value: this.state.teamName,
-          onChange: event => this.setState({ teamName: event.target.value }),
-          placeholder: 'Team Name', required: true }),
-        React.createElement('input', { type: 'text',
-          value: this.state.leagueId,
-          onChange: event => this.setState({ leagueId: event.target.value }),
-          placeholder: 'League ID', required: true }),
-        React.createElement('input', { type: 'text',
-          value: this.state.espnS2,
-          onChange: event => this.setState({ espnS2: event.target.value }),
-          placeholder: 'ESPNS2 Cookie', required: true }),
-        React.createElement('input', { type: 'text',
-          value: this.state.SWID,
-          onChange: event => this.setState({ SWID: event.target.value }),
-          placeholder: 'SWID Cookie', required: true }),
+          value: this.state.matchupString,
+          onChange: event => this.setState({ matchupString: event.target.value }),
+          placeholder: 'Matchup String', required: true }),
         React.createElement(
           'button',
           { type: 'submit' },
@@ -168,11 +151,9 @@ const HalfOfScoreBoard = props => {
   };
   let scoreChange = props.team.score - props.prevScore;
   let isHome = props.team.teamName === props.homeTeam;
-  console.log(scoreChange);
   let redFlash = !isHome && scoreChange;
   let greenFlash = isHome && scoreChange;
   let flashClassName = redFlash ? 'scorecard scoreFlashRed' : greenFlash ? 'scorecard scoreFlashGreen' : 'scorecard';
-  console.log(flashClassName);
   return React.createElement(
     'div',
     { className: flashClassName },
@@ -199,7 +180,7 @@ class Scoreboard extends React.Component {
     super(props);
 
     this.getMatchupData = () => {
-      console.log('calling' + this.props.homeTeam);
+      console.log('calling: ' + this.props.homeTeam);
       return axios.post('/getFFData', this.state.request).then(result => {
         this.setState(prevState => ({
           prevMatchup: prevState.matchup || result.data.matchup,
