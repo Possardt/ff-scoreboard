@@ -6,6 +6,7 @@
   const espn        = require('espn-ff-api');
   const server      = require('http').createServer(app);
   const bodyParser  = require('body-parser');
+  const crawler     = require('./js/MinutesLeftCrawler.js');
 
   app.use(bodyParser.json());
   app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
@@ -18,13 +19,24 @@
 
   app.post('/getFFData', (req,res) => {
     if(validRequestBody(req.body)){
-          espn.getSpecificMatchup(req.body.cookies, req.body.leagueId, req.body.teamLocation, req.body.teamName)
-              .then(response => {
-                res.send(response);
-              })
-              .catch(err => {
-                res.status(500).send(err);
-              });
+      let fullResponse;
+      espn.getSpecificMatchup(req.body.cookies, req.body.leagueId, req.body.teamLocation, req.body.teamName)
+          .then(response => {
+            fullResponse = response;
+            let teamId = findTeamId(response, req.body.teamLocation, req.body.teamName);
+            return crawler.getMinutesLeft(req.body.cookies, req.body.leagueId, teamId);
+          })
+          .then(crawledInfo => {
+            return fullResponse
+              .forEach(team => team.minutesLeft = crawledInfo[team.teamName]);
+          })
+          .then(() => {
+            res.send(fullResponse);
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(500).send(err);
+          });
     }
     else {
       res.sendStatus(400);
@@ -36,6 +48,12 @@
             body.teamName && body.cookies.espnS2 &&
             body.cookies.SWID);
   }
+
+  let findTeamId = (teams, teamLocation, teamName) => {
+    return teams
+      .filter(team => team.teamName === (teamLocation + ' ' + teamName))
+      .map(team => team.teamId)[0];
+  };
 
   server.listen(3000);
   console.log('started on port 3000');

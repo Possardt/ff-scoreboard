@@ -1,18 +1,11 @@
 
 const transformSubmit = (matchupStr) => {
   let details = matchupStr.split(',');
-  console.log(details);
   const request = {cookies : {}};
   details.forEach(detail => {
-    console.log(detail);
     let detailArr = detail.split('=');
-    console.log(detailArr);
     if(detailArr[0] === 'SWID' || detailArr[0] === 'espnS2'){
       request.cookies[detailArr[0]] = detailArr[1];
-    }
-    else if(detailArr[0] === "David's Johnson"){
-      console.log('this seems to handle it fine');
-
     }
     else{
       request[detailArr[0]] = detailArr[1];
@@ -32,7 +25,6 @@ class Form extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let requestDetails = transformSubmit(this.state.matchupString);
-    console.log(requestDetails);
     return axios.post('/getFFData', requestDetails)
       .then(result => {
         const matchupInfo = {
@@ -64,7 +56,7 @@ class Form extends React.Component {
 }
 
 const HalfOfScoreBoard = (props) => {
-  let backgroundStyle = {
+  let backgroundLogo = {
     background: 'url(' + props.team.logoUrl + ')',
     position: 'absolute',
     zIndex: '-1',
@@ -77,6 +69,12 @@ const HalfOfScoreBoard = (props) => {
     backgroundSize: 'contain',
     backgroundPositionX: 'center'
   };
+  let percentGreen = Math.floor(((540 - props.team.minutesLeft) / 540) * 100);
+  let teamNameBackground = {
+    background : 'linear-gradient(90deg, rgba(63, 191, 63, 0.6) ' + percentGreen +
+                  '%, rgba(1,1,1,0) ' + (percentGreen + 5) + '%)'
+  }
+
   let scoreChange = props.team.score - props.prevScore;
   let isHome = props.team.teamName === props.homeTeam;
   let redFlash = (!isHome && scoreChange);
@@ -84,8 +82,8 @@ const HalfOfScoreBoard = (props) => {
   let flashClassName = redFlash ? 'scorecard scoreFlashRed' : greenFlash ? 'scorecard scoreFlashGreen' : 'scorecard';
   return(
     <div className={flashClassName}>
-      <div className='teamName'>
-        <div style={backgroundStyle}></div>
+      <div className='teamName' style={teamNameBackground}>
+        <div style={backgroundLogo}></div>
         <div>
           {props.team.teamName}
         </div>

@@ -42,17 +42,20 @@ body, input, form, button{
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+  padding-top: 0.2em;
 }
 
 .score {
   font-weight: 200;
   font-size:2.75em;
+  padding-bottom: 0.25em;
 }
 
 .scorecard {
   position: relative;
   z-index: 1;
-  padding: 0.5em;
 }
 
 .scoreboard-list {
@@ -60,6 +63,7 @@ body, input, form, button{
   flex-direction: row;
   flex-wrap:wrap;
   width: fit-content;
+  margin: auto;
 }
 
 @keyframes scoreFlashGreen {
