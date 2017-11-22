@@ -56,8 +56,9 @@ class Form extends React.Component {
 }
 
 const HalfOfScoreBoard = (props) => {
+  let logo = props.team.logoUrl ? props.team.logoUrl : 'http://g.espncdn.com/lm-static/ffl17/images/default.svg';
   let backgroundLogo = {
-    background: 'url(' + props.team.logoUrl + ')',
+    background: 'url(' + logo + ')',
     position: 'absolute',
     zIndex: '-1',
     top: '0px',
@@ -67,19 +68,21 @@ const HalfOfScoreBoard = (props) => {
     opacity: '0.2',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'contain',
-    backgroundPositionX: 'center'
+    backgroundPositionX: 'center',
+    marginTop: '1.5em',
+    marginBottom: '0.25em'
   };
-  let percentGreen = Math.floor(((540 - props.team.minutesLeft) / 540) * 100);
-  let teamNameBackground = {
-    background : 'linear-gradient(90deg, rgba(63, 191, 63, 0.6) ' + percentGreen +
-                  '%, rgba(1,1,1,0) ' + (percentGreen + 5) + '%)'
-  }
-
   let scoreChange = props.team.score - props.prevScore;
   let isHome = props.team.teamName === props.homeTeam;
   let redFlash = (!isHome && scoreChange);
   let greenFlash = (isHome && scoreChange);
   let flashClassName = redFlash ? 'scorecard scoreFlashRed' : greenFlash ? 'scorecard scoreFlashGreen' : 'scorecard';
+
+  let percentDone = Math.floor(((540 - props.team.minutesLeft) / 540) * 100);
+  let teamNameBackground = {
+    background : 'linear-gradient(90deg, ' + (isHome ? ' rgba(127, 191, 63, 0.5) ' : ' rgba(191, 63, 63, 0.5) ')
+                  + percentDone + '%, rgba(1,1,1,0) 0%)'
+  }
   return(
     <div className={flashClassName}>
       <div className='teamName' style={teamNameBackground}>

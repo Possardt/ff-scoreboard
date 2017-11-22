@@ -7,6 +7,10 @@
   const cookieJar     = rp.jar();
 
   let getMinutesLeft = (cookies, leagueId, teamId) => {
+    let day = new Date().getDay();
+    if(day === 2 || day === 3){
+      return {};
+    }
     let options = setupOptions(cookies, leagueId, teamId);
     return rp(options)
       .then(html => {
@@ -35,7 +39,7 @@
       'teamNameTeam2' : ($doc) => {
         return $doc.find('b')[7].children[0].data;
       }
-    })
+    });
   };
 
   let setupOptions = (cookies, leagueId, teamId) => {
