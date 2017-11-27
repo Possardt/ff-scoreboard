@@ -34,10 +34,10 @@
         return $doc.find('.noHighlight')[6].children[0].next.children[0].data;
       },
       'teamNameTeam1' : ($doc) => {
-        return $doc.find('b')[3].children[0].data;
+        return $doc.find('b')[2].children[0].data;
       },
       'teamNameTeam2' : ($doc) => {
-        return $doc.find('b')[7].children[0].data;
+        return $doc.find('b')[6].children[0].data;
       }
     });
   };
@@ -46,7 +46,8 @@
     return {
       method : 'GET',
       jar    : setUpCookies(cookies, cookieJar),
-      uri    : 'http://games.espn.com/ffl/boxscorequick?leagueId=' + leagueId + '&teamId=' + teamId + '&scoringPeriodId=11&seasonId=2017&view=scoringperiod&version=quick'
+      uri    : 'http://games.espn.com/ffl/boxscorequick?leagueId=' + leagueId + '&teamId=' + teamId + '&seasonId=2017&view=scoringperiod&version=quick',
+      "cache-control": "no-cache"
     }
   };
 

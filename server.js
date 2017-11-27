@@ -27,7 +27,7 @@
             return crawler.getMinutesLeft(req.body.cookies, req.body.leagueId, teamId);
           })
           .then(crawledInfo => {
-            if(crawledInfo[req.body.teamName]){
+            if(Object.keys(crawledInfo).length){
               return fullResponse
                 .forEach(team => team.minutesLeft = crawledInfo[team.teamName]);
             }
